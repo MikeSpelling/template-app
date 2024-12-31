@@ -35,12 +35,32 @@ struct View1: View {
                 .padding(.bottom, 16)
                 
                 Button { router.showModal(.view1)
-                } label: { Text("Modal View1") }
+                } label: { Text("Large Sheet View1") }
                 
                 Button { router.showModal(.view2)
-                } label: { Text("Modal View2") }
+                } label: { Text("Large Sheet View2") }
                 
                 Button { router.showModal(.view3)
+                } label: { Text("Large Sheet View3") }
+                .padding(.bottom, 16)
+                
+                Button { router.showModal(.view1, modalPresentationSize: .sheet([.large, .medium]))
+                } label: { Text("Small and Large Sheet View1") }
+                
+                Button { router.showModal(.view2, modalPresentationSize: .sheet([.large, .medium]))
+                } label: { Text("Small and Large Sheet View2") }
+                
+                Button { router.showModal(.view3, modalPresentationSize: .sheet([.large, .medium]))
+                } label: { Text("Small and Large Sheet View3") }
+                .padding(.bottom, 16)
+                
+                Button { router.showModal(.view1, modalPresentationSize: .fullscreen)
+                } label: { Text("Modal View1") }
+                
+                Button { router.showModal(.view2, modalPresentationSize: .fullscreen)
+                } label: { Text("Modal View2") }
+                
+                Button { router.showModal(.view3, modalPresentationSize: .fullscreen)
                 } label: { Text("Modal View3") }
                 .padding(.bottom, 16)
                 

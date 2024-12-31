@@ -7,19 +7,24 @@
 
 import SwiftUI
 
+enum ModalPresentationSize: Hashable {
+    case sheet(Set<PresentationDetent>)
+    case fullscreen
+}
+
 protocol Router: ObservableObject {
     func pushTo(_ route: Route)
     func goBack()
     func popToRoot()
-    func showModal(_ route: Route)
+    func showModal(_ route: Route, modalPresentationSize: ModalPresentationSize)
     func closeModal()
     func closeAllModals()
     func swapToTab(_ newTab: Tab, closingModals: Bool)
 }
 extension Router {
-    func swapToTab(_ newTab: Tab) {
-        swapToTab(newTab, closingModals: true)
-    }
+    func swapToTab(_ newTab: Tab) { swapToTab(newTab, closingModals: true) }
+    
+    func showModal(_ route: Route) { showModal(route, modalPresentationSize: .sheet([.large])) }
 }
 
 final class StandardRouter: Router {
@@ -32,6 +37,12 @@ final class StandardRouter: Router {
     @Published var path = [Route]()
     
     @Published var modalRoute: Route?
+    private(set) var modalPresentationSize = ModalPresentationSize.sheet([.large])
+    var presentationDetents: Set<PresentationDetent> {
+        if case .sheet(let detents) = modalPresentationSize { detents
+        } else { [] }
+    }
+    
     private var presentingModal: Binding<Route?>?
     private var presentingRouter: (any Router)?
     
@@ -60,7 +71,8 @@ final class StandardRouter: Router {
         path = []
     }
     
-    func showModal(_ route: Route) {
+    func showModal(_ route: Route, modalPresentationSize: ModalPresentationSize) {
+        self.modalPresentationSize = modalPresentationSize
         modalRoute = route
     }
     

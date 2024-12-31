@@ -55,7 +55,21 @@ struct NavigatableTabModifier: ViewModifier {
                         .background(Color.purple)
                 }
                 .sheet(isPresented: Binding(
-                    get: { router.modalRoute != nil },
+                    get: { router.modalRoute != nil && router.modalPresentationSize != .fullscreen},
+                    set: { if $0 == false { router.modalRoute = nil } }
+                )) {
+                    StandardRouter(
+                        tab,
+                        route: router.modalRoute!,
+                        currentTabBinding: currentTabBinding,
+                        presentingModal: $router.modalRoute,
+                        presentingRouter: router
+                    )
+                    .homeViewInTab(context)
+                    .presentationDetents(router.presentationDetents)
+                }
+                .fullScreenCover(isPresented: Binding(
+                    get: { router.modalRoute != nil && router.modalPresentationSize == .fullscreen},
                     set: { if $0 == false { router.modalRoute = nil } }
                 )) {
                     StandardRouter(
