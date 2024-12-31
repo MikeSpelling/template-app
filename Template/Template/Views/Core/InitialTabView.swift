@@ -77,25 +77,8 @@ struct NavigatableTabModifier: ViewModifier {
                     )
                     .view(context: context)
                 }
-                .alert(
-                    router.alert?.title ?? "",
-                    isPresented: Binding(
-                        get: { router.alert != nil },
-                        set: { if $0 == false { router.alert = nil } }
-                    ),
-                    presenting: router.alert
-                ) { alert in
-                    ForEach(alert.actions) { action in
-                        Button(role: action.role) {
-                            action.action?()
-                        } label: {
-                            Text(action.title)
-                        }
-                    }
-                } message: { alert in
-                    if let message = alert.message {
-                        Text(message)
-                    }
+                .if(router.alert != nil) { view in
+                    view.modifier(AlertModifier($router.alert))
                 }
         }
         .if(has: tab) { view, tab in
@@ -108,6 +91,7 @@ struct NavigatableTabModifier: ViewModifier {
         }
     }
 }
+
 
 #Preview {
     InitialTabView(StandardContext())

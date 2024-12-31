@@ -12,13 +12,15 @@ struct AppAlert: Hashable, Identifiable {
     let title: String
     let message: String?
     let actions: [AlertAction]
+    let isConfirmationDialogue: Bool
 
     var id: String { (title) + (message ?? "") }
 
-    init(title: String, message: String? = nil, actions: [AlertAction] = []) {
+    init(title: String, message: String? = nil, actions: [AlertAction] = [], isConfirmationDialogue: Bool = false) {
         self.title = title
         self.message = message
         self.actions = actions
+        self.isConfirmationDialogue = isConfirmationDialogue
     }
 }
 

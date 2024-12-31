@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct View3: View {
-
+    
     private let context: Context
     private let router: any Router
     
     @State var text = ""
-
+    
     init(context: Context, router: any Router) {
         self.context = context
         self.router = router
     }
-
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 8) {
@@ -32,7 +32,7 @@ struct View3: View {
                 
                 Button { router.pushTo(.view3)
                 } label: { Text("Push View3") }
-                .padding(.bottom, 16)
+                    .padding(.bottom, 16)
                 
                 Button { router.showModal(.view1)
                 } label: { Text("Large Sheet View1") }
@@ -42,7 +42,7 @@ struct View3: View {
                 
                 Button { router.showModal(.view3)
                 } label: { Text("Large Sheet View3") }
-                .padding(.bottom, 16)
+                    .padding(.bottom, 16)
                 
                 Button { router.showModal(.view1, modalPresentationSize: .sheet([.large, .medium]))
                 } label: { Text("Small and Large Sheet View1") }
@@ -52,7 +52,7 @@ struct View3: View {
                 
                 Button { router.showModal(.view3, modalPresentationSize: .sheet([.large, .medium]))
                 } label: { Text("Small and Large Sheet View3") }
-                .padding(.bottom, 16)
+                    .padding(.bottom, 16)
                 
                 Button { router.showModal(.view1, modalPresentationSize: .fullscreen)
                 } label: { Text("Modal View1") }
@@ -62,7 +62,7 @@ struct View3: View {
                 
                 Button { router.showModal(.view3, modalPresentationSize: .fullscreen)
                 } label: { Text("Modal View3") }
-                .padding(.bottom, 16)
+                    .padding(.bottom, 16)
                 
                 Button { router.goBack()
                 } label: { Text("Back") }
@@ -76,22 +76,42 @@ struct View3: View {
                 
                 Button { router.closeAllModals()
                 } label: { Text("Close All") }
-                .padding(.bottom, 16)
+                    .padding(.bottom, 16)
                 
                 Button { router.showAlert(AppAlert(title: "Test", message: "Message"))
                 } label: { Text("Show Alert with no actions") }
                 
-                Button { router.showAlert(AppAlert(title: "Test", actions: [
-                    AlertAction("Cancel action", role: .cancel),
-                    AlertAction("Some Action", action: { print("Some action tapped") })
-                ]))
+                Button {
+                    router.showAlert(AppAlert(title: "Test", actions: [
+                        AlertAction("Cancel action", role: .cancel),
+                        AlertAction("Some Action", action: { print("Some action tapped") })
+                    ]))
                 } label: { Text("Show Alert with actions") }
-
-                Button { router.showAlert(AppAlert(title: "Test", actions: [
-                    AlertAction("Empty action"),
-                    AlertAction("Destructive action", role: .destructive, action: { print("Destructive action tapped") })
-                ]))
+                
+                Button {
+                    router.showAlert(AppAlert(title: "Test", actions: [
+                        AlertAction("Empty action"),
+                        AlertAction("Destructive action", role: .destructive, action: { print("Destructive action tapped") })
+                    ]))
                 } label: { Text("Show Alert with actions but no explicit Cancel") }
+                    .padding(.bottom, 16)
+                
+                Button { router.showAlert(AppAlert(title: "Test", message: "Message", isConfirmationDialogue: true))
+                } label: { Text("Show Actionsheet with no actions") }
+                
+                Button {
+                    router.showAlert(AppAlert(title: "Test", actions: [
+                        AlertAction("Cancel action", role: .cancel),
+                        AlertAction("Some Action", action: { print("Some action tapped") })
+                    ], isConfirmationDialogue: true))
+                } label: { Text("Show Actionsheet with actions") }
+                
+                Button {
+                    router.showAlert(AppAlert(title: "Test", actions: [
+                        AlertAction("Empty action"),
+                        AlertAction("Destructive action", role: .destructive, action: { print("Destructive action tapped") })
+                    ], isConfirmationDialogue: true))
+                } label: { Text("Show Actionsheet with actions but no explicit Cancel") }
                     .padding(.bottom, 16)
                 
                 Button { router.swapToTab(.tab1)
