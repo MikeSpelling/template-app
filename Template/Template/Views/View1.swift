@@ -11,6 +11,8 @@ struct View1: View {
 
     private let context: Context
     private let router: any Router
+    
+    @State var text = ""
 
     init(context: Context, router: any Router) {
         self.context = context
@@ -73,6 +75,9 @@ struct View1: View {
                 
                 Button { router.swapToTab(.tab3, closingModals: false)
                 } label: { Text("Swap to Tab 3") }
+                    .padding(.bottom, 16)
+                
+                TextField("Enter Text", text: $text)
             }
             .frame(maxWidth: .infinity)
         }
