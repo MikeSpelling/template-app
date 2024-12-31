@@ -51,6 +51,9 @@ struct NavigatableTabModifier: ViewModifier {
             content
                 .navigationDestination(for: Route.self) { navRoute in
                     navRoute.view(context: context, router: router)
+                        .if(router.alert != nil && router.path.last == navRoute) { view in
+                            view.modifier(AlertModifier($router.alert))
+                        }
                 }
                 .sheet(isPresented: Binding(
                     get: { router.modalRoute != nil && router.modalPresentationSize != .fullscreen },
@@ -77,7 +80,7 @@ struct NavigatableTabModifier: ViewModifier {
                     )
                     .view(context: context)
                 }
-                .if(router.alert != nil) { view in
+                .if(router.alert != nil && router.path.isEmpty) { view in
                     view.modifier(AlertModifier($router.alert))
                 }
         }
