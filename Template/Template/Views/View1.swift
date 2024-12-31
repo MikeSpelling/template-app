@@ -78,6 +78,22 @@ struct View1: View {
                 } label: { Text("Close All") }
                 .padding(.bottom, 16)
                 
+                Button { router.showAlert(AppAlert(title: "Test", message: "Message"))
+                } label: { Text("Show Alert with no actions") }
+                
+                Button { router.showAlert(AppAlert(title: "Test", actions: [
+                    AlertAction("Cancel action", role: .cancel),
+                    AlertAction("Some Action", action: { print("Some action tapped") })
+                ]))
+                } label: { Text("Show Alert with actions") }
+
+                Button { router.showAlert(AppAlert(title: "Test", actions: [
+                    AlertAction("Empty action"),
+                    AlertAction("Destructive action", role: .destructive, action: { print("Destructive action tapped") })
+                ]))
+                } label: { Text("Show Alert with actions but no explicit Cancel") }
+                    .padding(.bottom, 16)
+                
                 Button { router.swapToTab(.tab1)
                 } label: { Text("Swap to Tab 1 closing modals") }
                 

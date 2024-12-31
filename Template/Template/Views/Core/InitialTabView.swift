@@ -53,7 +53,7 @@ struct NavigatableTabModifier: ViewModifier {
                     navRoute.view(context: context, router: router)
                 }
                 .sheet(isPresented: Binding(
-                    get: { router.modalRoute != nil && router.modalPresentationSize != .fullscreen},
+                    get: { router.modalRoute != nil && router.modalPresentationSize != .fullscreen },
                     set: { if $0 == false { router.modalRoute = nil } }
                 )) {
                     StandardRouter(
@@ -66,7 +66,7 @@ struct NavigatableTabModifier: ViewModifier {
                     .presentationDetents(router.presentationDetents)
                 }
                 .fullScreenCover(isPresented: Binding(
-                    get: { router.modalRoute != nil && router.modalPresentationSize == .fullscreen},
+                    get: { router.modalRoute != nil && router.modalPresentationSize == .fullscreen },
                     set: { if $0 == false { router.modalRoute = nil } }
                 )) {
                     StandardRouter(
@@ -76,6 +76,26 @@ struct NavigatableTabModifier: ViewModifier {
                         presentingRouter: router
                     )
                     .view(context: context)
+                }
+                .alert(
+                    router.alert?.title ?? "",
+                    isPresented: Binding(
+                        get: { router.alert != nil },
+                        set: { if $0 == false { router.alert = nil } }
+                    ),
+                    presenting: router.alert
+                ) { alert in
+                    ForEach(alert.actions) { action in
+                        Button(role: action.role) {
+                            action.action?()
+                        } label: {
+                            Text(action.title)
+                        }
+                    }
+                } message: { alert in
+                    if let message = alert.message {
+                        Text(message)
+                    }
                 }
         }
         .if(has: tab) { view, tab in

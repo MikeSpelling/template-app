@@ -19,6 +19,7 @@ protocol Router: ObservableObject {
     func showModal(_ route: Route, modalPresentationSize: ModalPresentationSize)
     func closeModal()
     func closeAllModals()
+    func showAlert(_ alert: AppAlert)
     func swapToTab(_ newTab: Tab, closingModals: Bool)
 }
 extension Router {
@@ -34,6 +35,8 @@ final class StandardRouter: Router {
     private var currentTabBinding: Binding<Tab>
     
     @Published var path = [Route]()
+    
+    @Published var alert: AppAlert?
     
     @Published var modalRoute: Route?
     private(set) var modalPresentationSize = ModalPresentationSize.sheet([.large])
@@ -81,6 +84,10 @@ final class StandardRouter: Router {
     func closeAllModals() {
         presentingRouter?.closeAllModals()
         closeModal()
+    }
+    
+    func showAlert(_ alert: AppAlert) {
+        self.alert = alert
     }
     
     func swapToTab(_ newTab: Tab, closingModals: Bool) {
