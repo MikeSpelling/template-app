@@ -19,14 +19,14 @@ struct InitialTabView: View {
     
     var body: some View {
         TabView(selection: $currentTab) {
-            StandardRouter(.tab1, route: .view1, currentTabBinding: $currentTab)
-                .homeViewInTab(context)
+            StandardRouter(.view1, currentTabBinding: $currentTab)
+                .view(withTab: .tab1, context: context)
             
-            StandardRouter(.tab2, route: .view2, currentTabBinding: $currentTab)
-                .homeViewInTab(context)
+            StandardRouter(.view2, currentTabBinding: $currentTab)
+                .view(withTab: .tab2, context: context)
             
-            StandardRouter(.tab3, route: .view3, currentTabBinding: $currentTab)
-                .homeViewInTab(context)
+            StandardRouter(.view3, currentTabBinding: $currentTab)
+                .view(withTab: .tab3, context: context)
         }
     }
 }
@@ -34,12 +34,12 @@ struct InitialTabView: View {
 struct NavigatableTabModifier: ViewModifier {
     
     private let currentTabBinding: Binding<Tab>
-    private let tab: Tab
+    private let tab: Tab?
     private let context: Context
     
     @ObservedObject private var router: StandardRouter
     
-    init(_ tab: Tab, currentTabBinding: Binding<Tab>, context: Context, router: StandardRouter) {
+    init(_ tab: Tab?, currentTabBinding: Binding<Tab>, context: Context, router: StandardRouter) {
         self.currentTabBinding = currentTabBinding
         self.tab = tab
         self.context = context
@@ -49,23 +49,20 @@ struct NavigatableTabModifier: ViewModifier {
     func body(content: Content) -> some View {
         NavigationStack(path: $router.path) {
             content
-                .background(Color.purple)
                 .navigationDestination(for: Route.self) { navRoute in
                     navRoute.view(context: context, router: router)
-                        .background(Color.purple)
                 }
                 .sheet(isPresented: Binding(
                     get: { router.modalRoute != nil && router.modalPresentationSize != .fullscreen},
                     set: { if $0 == false { router.modalRoute = nil } }
                 )) {
                     StandardRouter(
-                        tab,
-                        route: router.modalRoute!,
+                        router.modalRoute!,
                         currentTabBinding: currentTabBinding,
                         presentingModal: $router.modalRoute,
                         presentingRouter: router
                     )
-                    .homeViewInTab(context)
+                    .view(context: context)
                     .presentationDetents(router.presentationDetents)
                 }
                 .fullScreenCover(isPresented: Binding(
@@ -73,20 +70,22 @@ struct NavigatableTabModifier: ViewModifier {
                     set: { if $0 == false { router.modalRoute = nil } }
                 )) {
                     StandardRouter(
-                        tab,
-                        route: router.modalRoute!,
+                        router.modalRoute!,
                         currentTabBinding: currentTabBinding,
                         presentingModal: $router.modalRoute,
                         presentingRouter: router
                     )
-                    .homeViewInTab(context)
+                    .view(context: context)
                 }
         }
-        .tabItem {
-            tab.image
-            Text(tab.name)
+        .if(has: tab) { view, tab in
+            view
+                .tabItem {
+                    tab.image
+                    Text(tab.name)
+                }
+                .tag(tab)
         }
-        .tag(tab)
     }
 }
 

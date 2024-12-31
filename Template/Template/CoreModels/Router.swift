@@ -29,7 +29,6 @@ extension Router {
 
 final class StandardRouter: Router {
     
-    let tab: Tab
     let route: Route
     
     private var currentTabBinding: Binding<Tab>
@@ -46,15 +45,14 @@ final class StandardRouter: Router {
     private var presentingModal: Binding<Route?>?
     private var presentingRouter: (any Router)?
     
-    init(_ tab: Tab, route: Route, currentTabBinding: Binding<Tab>, presentingModal: Binding<Route?>? = nil, presentingRouter: (any Router)? = nil) {
-        self.tab = tab
+    init(_ route: Route, currentTabBinding: Binding<Tab>, presentingModal: Binding<Route?>? = nil, presentingRouter: (any Router)? = nil) {
         self.route = route
         self.currentTabBinding = currentTabBinding
         self.presentingModal = presentingModal
         self.presentingRouter = presentingRouter
     }
     
-    func homeViewInTab(_ context: Context) -> some View {
+    func view(withTab tab: Tab? = nil, context: Context) -> some View {
         route.view(context: context, router: self)
             .modifier(NavigatableTabModifier(tab, currentTabBinding: currentTabBinding, context: context, router: self))
     }

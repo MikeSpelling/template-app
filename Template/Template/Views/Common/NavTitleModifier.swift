@@ -21,7 +21,7 @@ struct NavTitleModifier: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(title)
-                        .foregroundColor(.red)
+                        .foregroundColor(.white)
                 }
             }
     }
